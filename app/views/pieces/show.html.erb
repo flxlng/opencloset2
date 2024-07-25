@@ -1,0 +1,22 @@
+<p>
+  <strong>Name:</strong>
+  <%= @piece.name %>
+</p>
+
+<p>
+  <strong>Color:</strong>
+  <%= @piece.color %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @piece.description %>
+</p>
+
+<% if @piece.photos.attached? %>
+  <% @piece.photos.each do |photo| %>
+    <%= image_tag url_for(photo), height: 300, width: 400 %>
+  <% end %>
+<% end %>
+<%= link_to 'Edit', edit_piece_path(@piece) %> |
+<%= link_to 'Back', pieces_path %>
