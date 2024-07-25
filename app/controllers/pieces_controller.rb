@@ -1,23 +1,23 @@
 class PiecesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_piece, only: %i[show edit update destroy]
 
   def index
-    @pieces = Piece.all
+    @pieces = current_user.pieces.reverse_order
   end
 
   def show
   end
 
   def new
-    @piece = Piece.new
+    @piece = current_user.pieces.build
   end
 
   def edit
   end
 
   def create
-    @piece = Piece.new(piece_params)
-
+    @piece = current_user.pieces.build(piece_params)
     if @piece.save
       redirect_to @piece, notice: 'Piece was successfully created.'
     else

@@ -12,7 +12,7 @@
   </thead>
 
   <tbody>
-    <% @pieces.each do |piece| %>
+    <% current_user.pieces.each do |piece| %>
       <tr>
         <td><%= piece.name %></td>
         <td><%= piece.color %></td>
