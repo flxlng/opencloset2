@@ -1,5 +1,5 @@
 class PiecesController < ApplicationController
-  before_action :set_piece, only: [:show, :edit, :update, :destroy]
+  before_action :set_piece, only: %i[show edit update destroy]
 
   def index
     @pieces = Piece.all

@@ -19,4 +19,6 @@
   <% end %>
 <% end %>
 <%= link_to 'Edit', edit_piece_path(@piece) %> |
+<%= link_to 'Destroy', @piece, method: :delete, data: { confirm: 'Are you sure?' } %> |
+
 <%= link_to 'Back', pieces_path %>
