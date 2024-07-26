@@ -19,4 +19,7 @@
   <% end %>
 <% end %>
 <%= link_to 'Edit', edit_piece_path(@piece) %> |
+<%= form_with model: @piece, method: :delete, local: true do |form| %>
+  <%= form.submit 'Destroy', data: { confirm: 'Are you sure?' } %>
+<% end %>
 <%= link_to 'Back', pieces_path %>
