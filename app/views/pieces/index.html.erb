@@ -20,7 +20,12 @@
         <td><%= cl_image_tag(piece.photos[0].key, height: 300, width: 400, crop: :fill) if !piece.photos[0].nil? %></td>
         <td><%= link_to 'Show', piece %></td>
         <td><%= link_to 'Edit', edit_piece_path(piece) %></td>
-        <td><%#= link_to 'Destroy', piece, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <%# <td><%= link_to 'Destroy', piece, method: :delete, data: { confirm: 'Are you sure?' } %></td> %>
+        <td>
+          <%= form_with model: piece, method: :delete, local: true do |form| %>
+            <%= form.submit 'Destroy', data: { confirm: 'Are you sure?' } %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
