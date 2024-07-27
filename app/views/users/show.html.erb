@@ -1,0 +1,21 @@
+<h1>Profile</h1>
+
+<div>
+  <h2>Account Information</h2>
+  <p>Email: <%= @user.email %></p>
+  <p>Password: ********</p>
+  <a href="<%= edit_user_path(@user) %>">Edit Account, todo: edit on the page directly</a>
+</div>
+
+<div>
+  <h2>User Pieces</h2>
+  <% @user.pieces.each do |piece| %>
+    <p><%= piece.name %></p>
+    <%= piece.photos.attached? ? cl_image_tag(piece.photos[0].key, height: 300, width: 400, crop: :fill) : '' %>
+    <%= link_to 'Edit', edit_piece_path(piece), class: 'btn btn-primary' %>
+    <%= form_with model: piece, method: :delete, local: true do |form| %>
+      <%= form.submit 'Destroy', data: { confirm: 'Are you sure?' } %>
+    <% end %>
+    <br>
+  <% end %>
+</div>

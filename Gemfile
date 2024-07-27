@@ -7,6 +7,8 @@ gem "cloudinary"
 gem "activestorage-cloudinary-service"
 # gem "activestorage"
 # gem 'image_processing', '~> 1.2'
+#OpenAI
+gem "ruby-openai"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
 gem "rails", "~> 7.1.3", ">= 7.1.3.4"
