@@ -6,6 +6,8 @@
     <%= form.input :photos, as: :file, input_html: { class: 'form-control-file', multiple: true } %>
   </div>
 
+  <%= button_to 'Create Description', create_description_piece_path(@piece), method: :post, data: { confirm: 'Are you sure you want to create a description for this piece?' } %>
+
   <div class="form-actions">
     <%= form.button :submit, "Create Piece", class: 'btn btn-primary' %>
   </div>
