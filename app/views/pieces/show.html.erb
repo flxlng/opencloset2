@@ -24,3 +24,25 @@
   <%= form.submit 'Destroy', data: { confirm: 'Are you sure?' } %>
 <% end %>
 <%= link_to 'Back', pieces_path %>
+
+<%= simple_form_for(@booking) do |f| %>
+        <span>From:</span>
+        <%= f.input :start_date, as: :string, input_html: { data: { controller: "datepicker", datepicker_unavailable_value: @pieces.unavailable_dates.to_json }}, class: "flatpickr-range-time" %>
+        <span>To:</span>
+        <%= f.input :end_date, as: :string, input_html: { value: Date.tomorrow.strftime("%Y-%m-%d"), class: "end-date" } %>
+  <%= f.button :submit, 'Book Now!', class: ['submit-btn-red2 banger-font'] %>
+<% end %>
+
+<%= simple_form_for(@piece) do |form| %>
+  <div class="form-inputs">
+    <%= form.input :name, input_html: { class: 'form-control' } %>
+    <%= form.input :type, input_html: { class: 'form-control' } %>
+    <%= form.input :brand, input_html: { class: 'form-control' } %>
+    <%= form.label :color %>
+    <%= form.select :color, ['Red', 'Blue', 'Green', 'Yellow', 'Purple'], { prompt: 'Select Color' }, { class: 'form-control' } %>
+    <%= form.input :photos, as: :file, input_html: { class: 'form-control-file', multiple: true } %>
+  </div>
+  <div class="form-actions">
+    <%= form.button :submit, "Create Piece", class: 'btn btn-primary' %>
+  </div>
+<% end %>
