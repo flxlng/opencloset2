@@ -7,8 +7,9 @@ Rails.application.routes.draw do
     collection do
       get 'random'
     end
+    resources :bookings, only: ["create"]
   end
-  resources :bookings
+  resources :bookings, only: ["index", "update", "destroy"]
 
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
