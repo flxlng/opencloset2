@@ -1,11 +1,16 @@
 Rails.application.routes.draw do
   devise_for :users
-  # resources :pieces
   resources :pieces do
     member do
       post 'create_description'
     end
+    collection do
+      get 'random'
+    end
+    resources :bookings, only: ["create"]
   end
+  resources :bookings, only: ["index", "update", "destroy"]
+
   root to: "pages#home"
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

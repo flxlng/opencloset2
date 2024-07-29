@@ -24,3 +24,11 @@
   <%= form.submit 'Destroy', data: { confirm: 'Are you sure?' } %>
 <% end %>
 <%= link_to 'Back', pieces_path %>
+
+<%= simple_form_for [@piece, @booking] do |f| %>
+  <span>From:</span>
+  <%= f.input :start_date, as: :string, input_html: { value: Date.today.strftime("%Y-%m-%d"), data: { controller: "datepicker" }}, class: "flatpickr-range-time" %>
+  <span>To:</span>
+  <%= f.input :end_date, as: :string, input_html: { value: Date.tomorrow.strftime("%Y-%m-%d"), class: "end-date" } %>
+  <%= f.button :submit, 'Book Now!', class: ['submit-btn-red2 banger-font'] %>
+<% end %>
