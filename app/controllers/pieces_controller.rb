@@ -41,13 +41,12 @@ class PiecesController < ApplicationController
     redirect_to pieces_url, notice: 'Piece was successfully destroyed.'
   end
 
-
   def create_description
     if @piece.photos.attached?
       photo_url = "https://res.cloudinary.com/dvnfimkfd/image/upload/c_fill,h_300,w_400/v1/development/#{@piece.photos.first.key}?_a=BACCd2Bn"
 
       # Get the description from OpenAI API
-      description = Gpt.gpt_call("Describe the thing you see in the picture. Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
+      description = Gpt.gpt_call("Describe the thing you see in the picture in english. Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
       @piece.update(description: description)
 
       redirect_to @piece, notice: 'Description was successfully created.'
