@@ -44,10 +44,10 @@ class PiecesController < ApplicationController
 
   def create_description
     if @piece.photos.attached?
-      photo = generate_cloudinary_url(@piece.photos.first.key)
+      photo_url = "https://res.cloudinary.com/dvnfimkfd/image/upload/c_fill,h_300,w_400/v1/development/#{@piece.photos.first.key}?_a=BACCd2Bn"
 
       # Get the description from OpenAI API
-      description = Gpt.gpt_call("Please describe the following thing you see in the picture:", "https://t4.ftcdn.net/jpg/02/07/87/79/360_F_207877921_BtG6ZKAVvtLyc5GWpBNEIlIxsffTtWkv.jpg")
+      description = Gpt.gpt_call("Describe the thing you see in the picture. Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
       @piece.update(description: description)
 
       redirect_to @piece, notice: 'Description was successfully created.'
