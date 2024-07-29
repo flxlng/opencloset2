@@ -1,6 +1,10 @@
 <h1>Pieces</h1>
 <%= link_to 'New Piece', new_piece_path %>
 
+  <% @random_piece.each do |piece| %>
+      <h2><%= piece.name %></h2>
+  <% end %>
+
 <table>
   <thead>
     <tr>

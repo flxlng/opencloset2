@@ -6,6 +6,7 @@ class PiecesController < ApplicationController
 
   def index
     @pieces = current_user.pieces.reverse_order
+    random
   end
 
   def show
@@ -56,6 +57,11 @@ class PiecesController < ApplicationController
   end
 
   private
+
+  def random
+    random_piece = Piece.joins(:user).where.not(user_id: current_user.id).order("RANDOM()").limit(5)
+    @random_piece = random_piece
+  end
 
   def set_piece
     @piece = Piece.find(params[:id])

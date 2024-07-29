@@ -4,6 +4,9 @@ Rails.application.routes.draw do
     member do
       post 'create_description'
     end
+    collection do
+      get 'random'
+    end
   end
   resources :bookings
 
