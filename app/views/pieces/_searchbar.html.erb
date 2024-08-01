@@ -1,7 +1,10 @@
-<%= form_with url: pieces_path, method: :get do %>
+<div data-controller="searchbar" class="mt-5">
+<%= form_with url: pieces_path, method: :get, id: 'search-form', data: { action: "keyup->searchbar#autoSubmit" } do %>
   <%= text_field_tag :piecesearch,
         params[:piecesearch],
-        placeholder: "Search..."
+        placeholder: "Search...",
+        id: 'search-form'
     %>
   <%= submit_tag "Search", name: "", class: "btn btn-primary" %>
 <% end %>
+</div>
