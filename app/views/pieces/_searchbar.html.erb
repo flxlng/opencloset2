@@ -1,0 +1,7 @@
+<%= form_with url: pieces_path, method: :get do %>
+  <%= text_field_tag :piecesearch,
+        params[:piecesearch],
+        placeholder: "Search..."
+    %>
+  <%= submit_tag "Search", name: "", class: "btn btn-primary" %>
+<% end %>

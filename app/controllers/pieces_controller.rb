@@ -5,18 +5,16 @@ class PiecesController < ApplicationController
   before_action :set_piece, only: %i[show edit update destroy create_description]
 
   def index
-    @pieces = current_user.pieces.reverse_order
-    random
-    if params[:piecesearch].present? || params[:category].present?
+    if params[:piecesearch].present?
       sql_query = <<~SQL
-      name ILIKE :q OR
-      description ILIKE :q OR
-      users.alias ILIKE :q OR
-      users.secret_identity ILIKE :q
+      name ILIKE :q
       SQL
-      @pieces = @pieces.joins(:user).where(sql_query, q: "%#{params[:piecesearch]}%") if params[:piecesearch].present?
-      @pieces = @pieces.where('category @@ ?', params[:category]) if params[:category].present?
+      random_pieces = Piece.joins(:user).where.not(user_id: current_user.id).all
+      @random_piece = random_pieces.joins(:user).where(sql_query, q: "%#{params[:piecesearch]}%") if params[:piecesearch].present?
+    else
+      random
     end
+    @pieces = current_user.pieces.reverse_order
   end
 
   def show
