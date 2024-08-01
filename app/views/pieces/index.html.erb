@@ -1,14 +1,16 @@
 <%= render 'searchbar' %>
   <h1>Pieces</h1>
   <%= link_to 'New Piece', new_piece_path %>
-<div class="results">
-
+<div class="results" data-controller="searchbar">
     <% @random_piece.each do |piece| %>
+      <div data-searchbar-target="items">
         <h2><%= piece.name %></h2>
         <p><%= cl_image_tag(piece.photos[0].key, height: 300, width: 400, crop: :fill) if piece.photos.attached? %></p>
         <%= link_to 'Book', piece %>
+      </div>
     <% end %>
 </div>
+
 <table>
   <thead>
     <tr>
