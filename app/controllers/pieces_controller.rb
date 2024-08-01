@@ -7,10 +7,21 @@ class PiecesController < ApplicationController
   def index
     @pieces = current_user.pieces.reverse_order
     random
+    if params[:piecesearch].present? || params[:category].present?
+      sql_query = <<~SQL
+      name ILIKE :q OR
+      description ILIKE :q OR
+      users.alias ILIKE :q OR
+      users.secret_identity ILIKE :q
+      SQL
+      @pieces = @pieces.joins(:user).where(sql_query, q: "%#{params[:piecesearch]}%") if params[:piecesearch].present?
+      @pieces = @pieces.where('category @@ ?', params[:category]) if params[:category].present?
+    end
   end
 
   def show
     @booking = Booking.new
+    @current_user = current_user
   end
 
   def new
@@ -48,7 +59,7 @@ class PiecesController < ApplicationController
       photo_url = "https://res.cloudinary.com/dvnfimkfd/image/upload/c_fill,h_300,w_400/v1/development/#{@piece.photos.first.key}?_a=BACCd2Bn"
 
       # Get the description from OpenAI API
-      description = Gpt.gpt_call("Describe the thing you see in the picture in english. Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
+      description = Gpt.gpt_call("Describe the thing you see in the picture in english. Take the following things into consideration: #{"name: #{@piece.name}"} #{", brand: #{@piece.brand}" if @piece.brand.present?} #{", color: #{@piece.color}" if @piece.color.present?} #{", type: #{@piece.type}" if @piece.type.present?}.Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
       @piece.update(description: description)
 
       redirect_to @piece, notice: 'Description was successfully created.'
