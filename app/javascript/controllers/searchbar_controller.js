@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="searchbar"
 export default class extends Controller {
-static targets = [ "form", "input", "results" ]
+static targets = [ "input", "results" ]
 
   connect() {
     console.log("Hello from the searchbar_controller.js")

@@ -2,7 +2,7 @@
 <%= link_to 'New Piece', new_piece_path %>
 
 <div data-controller="searchbar">
-  <%= form_with url: search_path, method: :get, data: { searchbar_target: "form" } do |f| %>
+  <%= form_with url: search_path, method: :get do |f| %>
     <%= f.text_field :query,
                      placeholder: "Search...",
                      data: {
