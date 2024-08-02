@@ -47,10 +47,10 @@ static targets = [ "form", "input", "results" ]
     return pieces.map(piece => `
       <div class="piece-result">
         <h3>${piece.name}</h3>
-        <p>Color: ${piece.color}</p>
         <p>${piece.description}</p>
+        <p>${piece.photos && piece.photos[0] && piece.photos[0].key ? `<%= cl_image_tag('${piece.photos[0].key}', { height: 300, width: 400, crop: 'fill' }) %>` : ''}</p>
       </div>
-    `).join('')
+    `).join('');
   }
 
 
