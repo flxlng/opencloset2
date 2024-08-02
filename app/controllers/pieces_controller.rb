@@ -6,6 +6,7 @@ class PiecesController < ApplicationController
 
   def index
     if params[:piecesearch].present?
+      # search
       sql_query = <<~SQL
       name ILIKE :q
       SQL
@@ -32,26 +33,16 @@ class PiecesController < ApplicationController
   def create
     @piece = current_user.pieces.build(piece_params)
 
-    # if @piece.save
-    #   redirect_to @piece, notice: 'Piece was successfully created.'
-    # else
-    #   render :new
-    # end
-
     if @piece.save
-      render json: { inserted_item: render_to_string(partial: "pieces/piece", formats: :html, locals: { piece: @piece }) }, status: :created
+      redirect_to @piece, notice: 'Piece was successfully created.'
     else
-      render json: { errors: @piece.errors.full_messages }, status: :unprocessable_entity
+      render :new
     end
 
-    # respond_to do |format|
-    #   if @piece.save
-    #     format.html { redirect_to piece_path(@piece) }
-    #     format.json # Follows the classic Rails flow and look for a create.json view
-    #   else
-    #     format.html { render "pieces/new", status: :unprocessable_entity }
-    #     format.json # Follows the classic Rails flow and look for a create.json view
-    #   end
+    # if @piece.save
+    #   render json: { inserted_item: render_to_string(partial: "pieces/piece", formats: :html, locals: { piece: @piece }) }, status: :created
+    # else
+    #   render json: { errors: @piece.errors.full_messages }, status: :unprocessable_entity
     # end
   end
 
