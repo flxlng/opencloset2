@@ -23,6 +23,8 @@ Rails.application.routes.draw do
     get 'profile', on: :member
   end
 
+  get '/search', to: 'pieces#search'
+
   # Defines the root path route ("/")
   # root "posts#index"
 end

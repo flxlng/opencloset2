@@ -1,0 +1,11 @@
+<div data-controller="searchbar">
+  <%= form_with url: search_path, method: :get, data: { searchbar_target: "form" } do |f| %>
+    <%= f.text_field :query,
+                     placeholder: "Search...",
+                     data: {
+                       searchbar_target: "input",
+                       action: "input->searchbar#search"
+                     } %>
+  <% end %>
+  <div data-searchbar-target="results"></div>
+</div>

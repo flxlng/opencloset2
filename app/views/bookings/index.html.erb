@@ -1,6 +1,6 @@
 <% current_user.bookings.each do |booking| %>
   <%# <%= cl_image_tag booking.piece.photos.key, height: 300, width: 400, crop: :fill %> %>
-  <h2 class="banger-font"><%= booking.piece.name %></h2>
+  <h2><%= booking.piece.name %></h2>
   <%= link_to booking_path(booking), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to cancel this booking?" }, class: 'text-danger text-decoration-none' do %>
   <% end %>
     <% if booking.status.nil? %>
@@ -11,4 +11,30 @@
       Rejected
     <% end %>
   </p>
+<% end %>
+<% current_user.bookings_as_owner.each do |booking| %>
+  <%= cl_image_tag booking.piece.photo.key, height: 300, width: 400, crop: :fill %>
+  <h2><%= booking.piece.name %></h2>
+  <%= link_to booking_path(booking), data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete this booking?" }, class: 'text-danger text-decoration-none' do %>
+    <i class="fa-solid fa-trash"></i>
+  <% end %>
+  <p> <%= booking.user.alias %> wants to book <%= booking.piece.name %> on <%= booking.start_date %> until <%= booking.end_date %></p>
+  <% if booking.status.nil? %>
+    <%= simple_form_for booking do |f| %>
+      <%= f.input :status, as: :hidden, input_html: { value: true } %>
+      <%= f.submit 'Accept' %>
+    <% end %>
+    <%= simple_form_for booking do |f| %>
+      <%= f.input :status, as: :hidden, input_html: { value: false } %>
+      <%= f.submit 'Reject' %>
+    <% end %>
+  <% else %>
+    <p class='booking-tag'>
+      <% if booking.status %>
+        Approved
+      <% else %>
+        Rejeceted
+      <% end %>
+    </p>
+  <% end %>
 <% end %>

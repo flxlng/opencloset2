@@ -5,12 +5,22 @@ class PiecesController < ApplicationController
   before_action :set_piece, only: %i[show edit update destroy create_description]
 
   def index
+    if params[:piecesearch].present?
+      # search
+      sql_query = <<~SQL
+      name ILIKE :q
+      SQL
+      random_pieces = Piece.joins(:user).where.not(user_id: current_user.id).all
+      @random_piece = random_pieces.joins(:user).where(sql_query, q: "%#{params[:piecesearch]}%") if params[:piecesearch].present?
+    else
+      random
+    end
     @pieces = current_user.pieces.reverse_order
-    random
   end
 
   def show
     @booking = Booking.new
+    @current_user = current_user
   end
 
   def new
@@ -28,6 +38,12 @@ class PiecesController < ApplicationController
     else
       render :new
     end
+
+    # if @piece.save
+    #   render json: { inserted_item: render_to_string(partial: "pieces/piece", formats: :html, locals: { piece: @piece }) }, status: :created
+    # else
+    #   render json: { errors: @piece.errors.full_messages }, status: :unprocessable_entity
+    # end
   end
 
   def update
@@ -48,13 +64,19 @@ class PiecesController < ApplicationController
       photo_url = "https://res.cloudinary.com/dvnfimkfd/image/upload/c_fill,h_300,w_400/v1/development/#{@piece.photos.first.key}?_a=BACCd2Bn"
 
       # Get the description from OpenAI API
-      description = Gpt.gpt_call("Describe the thing you see in the picture in english. Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
+      description = Gpt.gpt_call("Describe the thing you see in the picture in english. Take the following things into consideration: #{"name: #{@piece.name}"} #{", brand: #{@piece.brand}" if @piece.brand.present?} #{", color: #{@piece.color}" if @piece.color.present?} #{", type: #{@piece.type}" if @piece.type.present?}.Keep it brief and make it suitable for a platform like Kleiderkreisel. Don't mention size or fabric:", photo_url)
       @piece.update(description: description)
 
       redirect_to @piece, notice: 'Description was successfully created.'
     else
       redirect_to @piece, alert: 'No photos attached to create a description.'
     end
+  end
+
+  def search
+    puts "Search action called with query: #{params[:query]}"
+    @pieces = Piece.where("name ILIKE ?", "%#{params[:query]}%")
+    render json: { pieces: @pieces.as_json(only: [:id, :name, :color, :description]) }
   end
 
   private
