@@ -2,44 +2,94 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="searchbar"
 export default class extends Controller {
-static targets = [ "form", "item" ]
+static targets = [ "form", "input", "results" ]
 
   connect() {
-    console.log("Hello from toggle_controller.js")
-  }
-  autoSubmit(event) {
-    console.log("Hello from autoSubmit")
-  //   const form = this.element.querySelector('form');
-  //   if (form) {
-  //     form.submit();
-  // } else {
-  //     console.error("Form element not found");
-  // }
+    console.log("Hello from the searchbar_controller.js")
   }
 
-  send(event) {
-    event.preventDefault()
+  search() {
+    console.log("searching...")
+    const query = this.inputTarget.value
+    clearTimeout(this.timeout)
+    this.timeout = setTimeout(() => {
+      this.performSearch(query)
+    }, 300)
+  }
 
-    console.log("TODO: send request in AJAX")
-
-    fetch(this.formTarget.action, {
-      method: "POST", // Could be dynamic with Stimulus values
-      headers: { "Accept": "application/json" },
-      body: new FormData(this.formTarget)
+  performSearch(query) {
+    console.log("performing search for", query);
+    fetch(`/search?query=${encodeURIComponent(query)}`, {
+      headers: { "Accept": "application/json" }
     })
     .then(response => {
       if (!response.ok) {
-        return response.json().then(errorData => {
-          throw new Error(errorData.errors.join(", "));
-        });
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
-      return response.json();
+      const contentType = response.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        return response.json();
+      } else {
+        throw new Error("Oops, we haven't got JSON!");
+      }
     })
-    .then((data) => {
-      console.log(data.inserted_item);
+    .then(data => {
+      this.resultsTarget.innerHTML = this.renderResults(data.pieces);
     })
-    .catch((error) => {
-      console.error("Error:", error.message);
+    .catch(error => {
+      console.error("Error:", error);
+      this.resultsTarget.innerHTML = `<p>An error occurred: ${error.message}</p>`;
     });
   }
+
+  renderResults(pieces) {
+    console.log(pieces);
+    return pieces.map(piece => `
+      <div class="piece-result">
+        <h3>${piece.name}</h3>
+        <p>Color: ${piece.color}</p>
+        <p>${piece.description}</p>
+      </div>
+    `).join('')
+  }
+
+
+
+  // send(event) {
+  //   event.preventDefault()
+  //   this.searchPieces(event)
+  // }
+
+  // searchPieces(event) {
+  //   event.preventDefault();
+  //   const term = this.formTarget.querySelector("#search-form").value;
+
+  //   fetch(`/search?query=${term}`, {
+  //     method: 'GET',
+  //     headers: {
+  //       'Content-Type': 'application/json'
+  //     }
+  //   })
+  //   .then(response => response.json())
+  //   .then(data => this.appendPiecesToDom(data.pieces))
+  //   .catch(error => console.error("Error:", error.message));
+  // }
+
+  // appendPiecesToDom(pieces) {
+  //   console.log(pieces)
+  //   const piecesContainer = this.itemTarget;
+  //   piecesContainer.innerHTML = ""; // Clear the previous results if any
+  //   pieces.forEach((piece) => {
+  //     const cardHTML = this.createPieceCard(piece);
+  //     piecesContainer.insertAdjacentHTML('beforeend', cardHTML);
+  //   });
+  // }
+
+  // createPieceCard(piece) {
+  //   return `
+  //     <div>
+  //     ${piece.name}
+  //     </div>
+  //   `
+  // }
 }

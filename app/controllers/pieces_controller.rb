@@ -82,6 +82,12 @@ class PiecesController < ApplicationController
     end
   end
 
+  def search
+    puts "Search action called with query: #{params[:query]}"
+    @pieces = Piece.where("name ILIKE ?", "%#{params[:query]}%")
+    render json: { pieces: @pieces.as_json(only: [:id, :name, :color, :description]) }
+  end
+
   private
 
   def random
